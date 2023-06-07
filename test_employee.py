@@ -1,4 +1,5 @@
 import requests
+import pytest
 
 BaseUrl = 'https://x-clients-be.onrender.com'
 
@@ -49,6 +50,15 @@ def test_get_employee_by_id():
     assert new_employee["firstName"] == "Виктор"    
     assert resp.status_code == 200
 
+@pytest.mark.xfail
+def test_get_employee_by_id_negative():
+
+    resp = requests.get(BaseUrl + '/employee/100')
+    new_employee = resp.json()
+   
+    assert new_employee["firstName"] == "Нога"    
+    assert resp.status_code == 401
+
 #[PATCH] /employee/{id}
 def test_patch_employee():
     for_auth = {
@@ -75,3 +85,4 @@ def test_patch_employee():
     resp = requests.patch(BaseUrl+'/employee/24', json=update_employee, headers=my_headers)
     
     assert resp.status_code == 200
+
